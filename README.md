@@ -1,7 +1,9 @@
 # Architecture_securisee_et_Analyse_de_vulnerabilite
 
+
 I. Partie Client : Keylogger Windows Furtif
 Le keylogger est basé sur le script Python keylogger_win_remote.py qui a été transformé en un exécutable autonome (.exe) pour une portabilité maximale.
+
 
 1. Structure du Binaire (keylogger_win_remote.exe)
 L'exécutable est généré à partir du script Python via PyInstaller avec les arguments suivants :
@@ -13,13 +15,17 @@ py -m PyInstaller --onefile --noconsole --hidden-import pynput --clean keylogger
 
 Autonomie : Le .exe intègre toutes les bibliothèques nécessaires (pynput pour la capture, requests pour l'envoi HTTP) et peut être exécuté sur un poste Windows "vierge".
 
+
 2. Mécanismes de Capture et de Stockage
 Capture : La bibliothèque pynput est utilisée pour mettre en place un hook au niveau du système d'exploitation et intercepter les événements de clavier (frappes normales, [ENTER], [TAB], etc.).
 Sauvegarde Locale (win_backup.log) : Pour assurer la persistance des données même sans connexion Internet, le script enregistre une copie de toutes les frappes dans un fichier de log local.
 Emplacement : Le log est dissimulé dans le répertoire temporaire de Windows (accessible via %temp%) sous le nom de win_backup.log.
 
+
+
 II. Partie Serveur : Réception et Exfiltration de Logs (Kali)
 Le serveur d'écoute est hébergé sur la VM Kali Attaquante et utilise un tunnel sécurisé pour recevoir les données du client Windows.
+
 
 1. Tunneling Sécurisé avec Ngrok
 Ngrok est utilisé pour créer un tunnel sécurisé entre la VM Kali (un environnement local) et le réseau Internet public.
@@ -28,6 +34,7 @@ Rôle de Ngrok : Il expose l'interface Web locale de Flask (le port 5000) à une
 
 Mise en place : Ngrok doit être lancé sur Kali avant de démarrer le serveur Flask, généralement pour exposer le port 5000 :
 ngrok http 5000
+
 
 2. Script de Réception avec Flask (log_receiver.py)
 Le serveur est géré par une micro-application Web Flask en Python.
