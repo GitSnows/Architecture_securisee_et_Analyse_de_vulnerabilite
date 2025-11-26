@@ -7,6 +7,7 @@ Le keylogger est basé sur le script Python keylogger_win_remote.py qui a été 
 L'exécutable est généré à partir du script Python via PyInstaller avec les arguments suivants :
 
 py -m PyInstaller --onefile --noconsole --hidden-import pynput --clean keylogger_win_remote.py
+
 --onefile : Intègre toutes les dépendances dans un seul fichier binaire, ne nécessitant aucune installation de Python ou de bibliothèques sur la machine cible.
 --noconsole : Rend l'application furtive. Elle s'exécute en arrière-plan sans afficher de fenêtre de console (cmd), empêchant l'utilisateur de remarquer son activité.
 
