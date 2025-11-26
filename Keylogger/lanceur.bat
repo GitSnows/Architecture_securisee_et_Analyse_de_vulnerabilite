@@ -1,63 +1,48 @@
 @echo off
-title Installation et Test Keylogger (Auto)
-color 0A
+title INSTALLATION AUTO (NOUVEAU SCRIPT)
+color 0B
 
-echo ========================================================
-echo      INITIALISATION DU TEST KEYLOGGER (WINDOWS)
-echo ========================================================
-
-:: 1. Vérification de Python
-echo [ETAPE 1] Verification de l'environnement...
-python --version >nul 2>&1
-
-if %errorlevel% neq 0 (
-    color 0E
-    echo [ALERTE] Python n'est pas detecte.
-    echo [ACTION] Tentative d'installation automatique de Python 3.11...
-    echo Veuillez patienter, cela peut prendre quelques minutes...
-    
-    :: Commande magique : Installe Python silencieusement via Winget
-    winget install -e --id Python.Python.3.11 --scope machine --accept-package-agreements --accept-source-agreements >nul 2>&1
-    
-    :: Vérification après installation
-    python --version >nul 2>&1
-    if %errorlevel% neq 0 (
-        color 0C
-        echo [ERREUR CRITIQUE] L'installation automatique a echoue.
-        echo Windows n'a pas pu installer Python. Faites-le manuellement sur python.org.
-        pause
-        exit
-    ) else (
-        color 0A
-        echo [SUCCES] Python a ete installe !
-    )
-) else (
-    echo [OK] Python est deja present.
-)
-
-:: 2. Installation de pynput
 echo.
-echo [ETAPE 2] Installation de la librairie de hook (pynput)...
-pip install pynput >nul 2>&1
+echo =====================================================
+echo   CECI EST LE NOUVEAU SCRIPT D'INSTALLATION
+echo =====================================================
+echo.
 
+:: 1. Test de Winget (l'outil d'installation)
+winget --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [INFO] Tentative de mise a jour de PIP...
-    python -m pip install --upgrade pip >nul 2>&1
-    pip install pynput >nul 2>&1
+    echo [INFO] Winget n'est pas detecte.
+    echo [ACTION] Nous allons ouvrir la page de telechargement Python.
+    echo Veuillez telecharger et installer Python manuellement.
+    echo IMPORTANT : COCHEZ "ADD TO PATH" !
+    start https://www.python.org/ftp/python/3.11.5/python-3.11.5-amd64.exe
+    pause
+    exit
 )
 
-:: 3. Lancement du script
+:: 2. Vérification Python
+python --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [ALERTE] Python n'est pas la.
+    echo [ACTION] Installation automatique en cours...
+    echo Ne touchez a rien, cela peut prendre 2 minutes...
+    
+    :: Installation silencieuse
+    winget install -e --id Python.Python.3.11 --scope machine --accept-package-agreements --accept-source-agreements
+    
+    echo.
+    echo [INFO] Verification apres installation...
+    python --version
+)
+
+:: 3. Installation des dépendances
+echo.
+echo [ETAPE 2] Installation de pynput...
+pip install pynput
+
+:: 4. Lancement
 echo.
 echo [ETAPE 3] Lancement du Keylogger...
-echo ========================================================
-echo.
-echo    >>> LE KEYLOGGER ECOUTE MAINTENANT <<<
-echo.
-echo 1. Ouvrez le Bloc-notes ou un navigateur.
-echo 2. Tapez du texte.
-echo 3. Regardez les lettres s'afficher ici et dans 'keylogs.txt'.
-echo.
-
 python keylogger_windows.py
 
 pause
