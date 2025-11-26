@@ -6,25 +6,22 @@ echo.
 echo ========================================================
 echo      INSTALLATION DE PYTHON (METHODE DIRECTE)
 echo ========================================================
-echo [INFO] Ce script DOIT etre execute en Administrateur.
+echo [ATTENTION] Ce script DOIT etre execute en tant qu'ADMINISTRATEUR.
 echo.
 
-:: 1. VERIFICATION PYTHON (Methode simple)
+:: 1. VERIFICATION PYTHON
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
     echo [ACTION] Telechargement de Python 3.11...
     
-    :: Telechargement de l'installateur (avec une vérification rapide)
-    where curl >nul 2>&1 || (echo [ERREUR] curl non trouve. Veuillez l'installer.)
-    if %errorlevel% neq 0 exit /B
-
+    :: Telechargement de l'installateur
     curl -o python_installer.exe https://www.python.org/ftp/python/3.11.5/python-3.11.5-amd64.exe
     
     echo.
     echo [ACTION] Installation silencieuse en cours...
     echo [INFO] Patientez. L'installateur s'execute en arriere-plan...
     
-    :: Installation silencieuse. Important pour que le PATH soit mis a jour.
+    :: Installation silencieuse avec ajout au PATH
     start /wait python_installer.exe /quiet InstallAllUsers=1 PrependPath=1 Include_test=0
     
     :: Nettoyage
@@ -43,7 +40,7 @@ echo.
 echo ========================================================
 
 :: Installation de pynput
-echo [ACTION] Installation des dependances...
+echo [ACTION] Installation des dependances (pynput, cryptography)...
 pip install pynput cryptography
 
 if %errorlevel% equ 0 (
