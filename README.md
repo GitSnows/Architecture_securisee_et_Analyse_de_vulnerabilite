@@ -17,7 +17,7 @@ Capture : La bibliothèque pynput est utilisée pour mettre en place un hook au 
 Sauvegarde Locale (win_backup.log) : Pour assurer la persistance des données même sans connexion Internet, le script enregistre une copie de toutes les frappes dans un fichier de log local.
 Emplacement : Le log est dissimulé dans le répertoire temporaire de Windows (accessible via %temp%) sous le nom de win_backup.log.
 
-II. 📡 Partie Serveur : Réception et Exfiltration de Logs (Kali)
+II. Partie Serveur : Réception et Exfiltration de Logs (Kali)
 Le serveur d'écoute est hébergé sur la VM Kali Attaquante et utilise un tunnel sécurisé pour recevoir les données du client Windows.
 
 1. Tunneling Sécurisé avec Ngrok
