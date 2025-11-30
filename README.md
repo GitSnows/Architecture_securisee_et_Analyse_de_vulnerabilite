@@ -48,7 +48,7 @@ Fonctionnement du script :
 - Il affiche cette URL (nécessaire pour le client).
 - Il lance Flask au premier plan pour afficher les logs entrants en direct.
 
-Note : Gardez ce terminal ouvert pour voir les mots de passe capturés apparaître en temps réel.
+> **Note :** Gardez ce terminal ouvert pour voir les mots de passe capturés apparaître en temps réel.
 
 #### 3. Configuration de la Cible (Windows 10/11)
 
@@ -125,6 +125,6 @@ Pour éviter de "spammer" le serveur C2 avec des logs illisibles :
 
 ###### C. Persistance et Discrétion
 
-Backup Local : En cas d'échec critique du réseau, une copie des logs est écrite discrètement dans le répertoire temporaire de l'utilisateur (%TEMP%\win_backup.log), permettant une récupération physique ultérieure (Forensics).
+**Backup Local :** En cas d'échec critique du réseau, une copie des logs est écrite discrètement dans le répertoire temporaire de l'utilisateur (%TEMP%\win_backup.log), permettant une récupération physique ultérieure (Forensics).
 
 **Processus Arrière-plan :** L'utilisation de pythonw (via `PyInstaller --noconsole`) détache le processus de la console standard Windows.
