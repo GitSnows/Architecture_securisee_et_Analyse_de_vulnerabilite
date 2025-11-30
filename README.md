@@ -91,10 +91,11 @@ Pour évaluer le projet, suivez ces étapes :
 
 > Victime : Sur Windows, double-cliquez sur Reader_install.exe.
 
-Observation : Rien ne se passe à l'écran (comportement attendu du malware). Vérifiez le Gestionnaire des tâches pour voir le processus en arrière-plan.
-Activité : Ouvrez un Bloc-notes et tapez du texte, des mots de passe. Vous pouvez aussi saisir du texte dans le navigateur par exemple.
+>Observation : Rien ne se passe à l'écran (comportement attendu du malware). Vérifiez le Gestionnaire des tâches pour voir le processus en arrière-plan.
 
-Exfiltration :
+>Activité : Ouvrez un Bloc-notes et tapez du texte, des mots de passe. Vous pouvez aussi saisir du texte dans le navigateur par exemple.
+
+> Exfiltration :
 
 Appuyez sur ENTRÉE pour forcer l'envoi immédiat. Ou patientez 60 secondes (cycle automatique).
 Résultat : Sur le terminal Kali, vous verrez apparaître :
