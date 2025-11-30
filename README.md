@@ -1,4 +1,4 @@
-# 🛡️ Architecture Sécurisée et Analyse de Vulnérabilité : Simulation d'Architecture & Exfiltration de Données
+# 🛡️ Architecture Sécurisée et Analyse de Vulnérabilité : Mise en place d'un KeyLogger
 
 #### ⚠️ AVERTISSEMENT LÉGAL ET ÉTHIQUE : 
 Ce projet a été développé dans un cadre strictement académique pour le Master 2 au sein du cours  "Architecture Sécurisée et Analyse de Vulnérabilité" à l'Efrei. Il a pour but d'étudier les mécanismes de persistance, d'obfuscation et d'exfiltration utilisés par les malwares modernes. L'utilisation de ce code sur des systèmes tiers sans consentement explicite est illégale et passible de sanctions pénales.
