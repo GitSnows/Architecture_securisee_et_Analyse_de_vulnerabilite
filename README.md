@@ -87,9 +87,9 @@ Le fichier infecté se trouve dans le dossier dist/Reader_install.exe.
 
 Pour évaluer le projet, suivez ces étapes :
 
-> Attaquant : Lancez `python3 lanceur_serveur.py` sur Kali. Le serveur est en écoute.
+** Attaquant : ** Lancez `python3 lanceur_serveur.py` sur Kali. Le serveur est en écoute.
 
-> Victime : Sur Windows, double-cliquez sur Reader_install.exe.
+** Victime : ** Sur Windows, double-cliquez sur Reader_install.exe.
 
 >Observation : Rien ne se passe à l'écran (comportement attendu du malware). Vérifiez le Gestionnaire des tâches pour voir le processus en arrière-plan.
 
