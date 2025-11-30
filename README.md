@@ -42,15 +42,11 @@ Sur la machine Kali, ouvrez un terminal dans le dossier du projet et lancer l'or
 
 Fonctionnement du script :
 
-Il nettoie les processus fantômes (conflits de port 5000).
-
-Il lance Ngrok en arrière-plan.
-
-Il récupère automatiquement l'URL Publique HTTPS via l'API locale de Ngrok.
-
-Il affiche cette URL (nécessaire pour le client).
-
-Il lance Flask au premier plan pour afficher les logs entrants en direct.
+- Il nettoie les processus fantômes (conflits de port 5000).
+- Il lance Ngrok en arrière-plan.
+- Il récupère automatiquement l'URL Publique HTTPS via l'API locale de Ngrok.
+- Il affiche cette URL (nécessaire pour le client).
+- Il lance Flask au premier plan pour afficher les logs entrants en direct.
 
 Note : Gardez ce terminal ouvert pour voir les mots de passe capturés apparaître en temps réel.
 
@@ -58,13 +54,11 @@ Note : Gardez ce terminal ouvert pour voir les mots de passe capturés apparaît
 
 La partie cliente consiste à transformer un script Python en un binaire autonome, en utilisant des techniques d'ingénierie sociale pour tromper la victime.
 
-Prérequis de Compilation
+Prérequis de Compilation :
 
-Machine Windows avec Python 3.x.
-
-Dépendances : pip install pynput requests pyinstaller.
-
-Ressource : Une icône réaliste (ex: acrobat.ico) placée dans le dossier.
+- Machine Windows avec Python 3.x.
+- Dépendances : pip install pynput requests pyinstaller.
+- Ressource : Une icône réaliste (ex: acrobat.ico) placée dans le dossier.
 
 ###### ⚙️ Création du Payload (Build)
 
@@ -95,20 +89,16 @@ Le fichier infecté se trouve dans le dossier dist/Reader_install.exe.
 
 Pour évaluer le projet, suivez ces étapes :
 
-Attaquant : Lancez python3 lanceur_serveur.py sur Kali. Le serveur est en écoute.
+> Attaquant : Lancez `python3 lanceur_serveur.py` sur Kali. Le serveur est en écoute.
 
-Victime : Sur Windows, double-cliquez sur Reader_install.exe.
+> Victime : Sur Windows, double-cliquez sur Reader_install.exe.
 
 Observation : Rien ne se passe à l'écran (comportement attendu du malware). Vérifiez le Gestionnaire des tâches pour voir le processus en arrière-plan.
-
-Activité : Ouvrez un Bloc-notes et tapez du texte, des mots de passe, ou faites des copier-coller.
+Activité : Ouvrez un Bloc-notes et tapez du texte, des mots de passe. Vous pouvez aussi saisir du texte dans le navigateur par exemple.
 
 Exfiltration :
 
-Appuyez sur ENTRÉE pour forcer l'envoi immédiat.
-
-Ou attendez 60 secondes (cycle automatique).
-
+Appuyez sur ENTRÉE pour forcer l'envoi immédiat. Ou patientez 60 secondes (cycle automatique).
 Résultat : Sur le terminal Kali, vous verrez apparaître :
 
 `[+] Log reçu : MonMotDePasseSecret123`
@@ -123,9 +113,7 @@ Ce projet démontre plusieurs concepts avancés de développement de malware :
 ###### A. Fiabilité de l'Exfiltration (TCP/HTTP)
 
 Le client n'envoie pas les données "à l'aveugle". Il implémente une logique de confirmation de réception :
-
 Le buffer local contenant les frappes n'est vidé QUE SI le serveur répond avec un code HTTP 200 OK.
-
 Si la connexion est coupée, le keylogger continue d'enregistrer localement. Les données accumulées seront envoyées en bloc dès le rétablissement de la connexion.
 
 ###### B. Optimisation des Données
@@ -134,11 +122,9 @@ Pour éviter de "spammer" le serveur C2 avec des logs illisibles :
 
 Filtrage : Les touches de contrôle (CTRL, ALT, SHIFT) sont interceptées mais ignorées pour ne garder que le texte utile.
 
-Nettoyage : Une vérification est effectuée pour empêcher l'envoi de paquets vides (cas fréquents après des raccourcis clavier ou des sauts de ligne multiples).
 
 ###### C. Persistance et Discrétion
 
 Backup Local : En cas d'échec critique du réseau, une copie des logs est écrite discrètement dans le répertoire temporaire de l'utilisateur (%TEMP%\win_backup.log), permettant une récupération physique ultérieure (Forensics).
 
 Processus Arrière-plan : L'utilisation de pythonw (via PyInstaller --noconsole) détache le processus de la console standard Windows.
-
