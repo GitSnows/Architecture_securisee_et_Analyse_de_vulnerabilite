@@ -96,7 +96,8 @@ Pour évaluer le projet, suivez ces étapes :
 >Activité : Ouvrez un Bloc-notes et tapez du texte, des mots de passe. Vous pouvez aussi saisir du texte dans le navigateur par exemple.
 
 > Exfiltration : Appuyez sur ENTRÉE pour forcer l'envoi immédiat. Ou patientez 60 secondes (cycle automatique).
-Résultat : Sur le terminal Kali, vous verrez apparaître :
+
+> Résultat : Sur le terminal Kali, vous verrez apparaître :
 
 `[+] Log reçu : MonMotDePasseSecret123`
 
