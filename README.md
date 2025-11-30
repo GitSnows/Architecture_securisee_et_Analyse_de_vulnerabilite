@@ -3,7 +3,7 @@
 #### ⚠️ AVERTISSEMENT LÉGAL ET ÉTHIQUE : 
 Ce projet a été développé dans un cadre strictement académique pour le Master 2 "Architecture Sécurisée et Analyse de Vulnérabilité". Il a pour but d'étudier les mécanismes de persistance, d'obfuscation et d'exfiltration utilisés par les malwares modernes. L'utilisation de ce code sur des systèmes tiers sans consentement explicite est illégale et passible de sanctions pénales.
 
-📑 Sommaire
+### 📑 Sommaire
 
 - Architecture du Projet
 - Configuration de l'Attaquant (Kali Linux)
@@ -11,7 +11,7 @@ Ce projet a été développé dans un cadre strictement académique pour le Mast
 - Scénario de Démonstration
 - Analyse Technique des Mécanismes
 
-1. Architecture du Projet
+#### 1. Architecture du Projet
 
 Ce projet implémente une Kill Chain complète simulant une attaque par Spyware. L'architecture repose sur un modèle Client-Serveur (C2 - Command & Control) utilisant un tunnel chiffré pour traverser les pare-feux (NAT Traversal).
 
@@ -21,7 +21,7 @@ Le Canal (Tunneling) : Utilisation de Ngrok pour exposer un service local sur In
 
 Le C2 (Serveur) : Un serveur Python Flask hébergé sur Kali Linux qui réceptionne les données exfiltrées, les affiche en temps réel et assure leur persistance sur disque.
 
-2. Configuration de l'Attaquant (Kali Linux)
+#### 2. Configuration de l'Attaquant (Kali Linux)
 
 L'infrastructure serveur a été entièrement automatisée via un script Python pour garantir un déploiement rapide et sans erreur.
 
@@ -62,7 +62,7 @@ Il lance Flask au premier plan pour afficher les logs entrants en direct.
 
 Note : Gardez ce terminal ouvert pour voir les mots de passe capturés apparaître en temps réel.
 
-3. Configuration de la Cible (Windows 10/11)
+#### 3. Configuration de la Cible (Windows 10/11)
 
 La partie cliente consiste à transformer un script Python en un binaire autonome, en utilisant des techniques d'ingénierie sociale pour tromper la victime.
 
@@ -99,7 +99,7 @@ py -m PyInstaller --onefile --noconsole --hidden-import pynput --icon=acrobat.ic
 Récupération :
 Le fichier infecté se trouve dans le dossier dist/Reader_install.exe.
 
-4. Scénario de Démonstration
+#### 4. Scénario de Démonstration
 
 Pour évaluer le projet, suivez ces étapes :
 
@@ -124,11 +124,11 @@ Résultat : Sur le terminal Kali, vous verrez apparaître :
 
 Les données sont également archivées dans logs_exfiltres_recus.txt.
 
-5. Analyse Technique des Mécanismes
+#### 5. Analyse Technique des Mécanismes
 
 Ce projet démontre plusieurs concepts avancés de développement de malware :
 
-A. Fiabilité de l'Exfiltration (TCP/HTTP)
+###### A. Fiabilité de l'Exfiltration (TCP/HTTP)
 
 Le client n'envoie pas les données "à l'aveugle". Il implémente une logique de confirmation de réception :
 
@@ -136,7 +136,7 @@ Le buffer local contenant les frappes n'est vidé QUE SI le serveur répond avec
 
 Si la connexion est coupée, le keylogger continue d'enregistrer localement. Les données accumulées seront envoyées en bloc dès le rétablissement de la connexion.
 
-B. Optimisation des Données
+###### B. Optimisation des Données
 
 Pour éviter de "spammer" le serveur C2 avec des logs illisibles :
 
@@ -144,10 +144,9 @@ Filtrage : Les touches de contrôle (CTRL, ALT, SHIFT) sont interceptées mais i
 
 Nettoyage : Une vérification est effectuée pour empêcher l'envoi de paquets vides (cas fréquents après des raccourcis clavier ou des sauts de ligne multiples).
 
-C. Persistance et Discrétion
+###### C. Persistance et Discrétion
 
 Backup Local : En cas d'échec critique du réseau, une copie des logs est écrite discrètement dans le répertoire temporaire de l'utilisateur (%TEMP%\win_backup.log), permettant une récupération physique ultérieure (Forensics).
 
 Processus Arrière-plan : L'utilisation de pythonw (via PyInstaller --noconsole) détache le processus de la console standard Windows.
 
-Projet Master 2 - Architecture Sécurisée
