@@ -13,7 +13,7 @@ Ce projet a été développé dans un cadre strictement académique pour le Mast
 
 #### 1. Architecture du Projet
 
-Ce projet implémente une Kill Chain complète simulant une attaque par Spyware. L'architecture repose sur un modèle Client-Serveur (C2 - Command & Control) utilisant un tunnel chiffré pour traverser les pare-feux (NAT Traversal).
+Ce projet implémente une Kill Chain complète simulant une attaque par KeyLogger. L'architecture repose sur un modèle Client-Serveur (C2 - Command & Control) utilisant un tunnel chiffré pour traverser les pare-feux (NAT Traversal).
 
 - Le Payload (Client) : Un exécutable Windows furtif (.exe) qui capture les frappes clavier (Keylogger), filtre les données inutiles et les stocke temporairement.
 - Le Canal (Tunneling) : Utilisation de Ngrok pour exposer un service local sur Internet via HTTPS, rendant le flux difficile à distinguer du trafic légitime.
