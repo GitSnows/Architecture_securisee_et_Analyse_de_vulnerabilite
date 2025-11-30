@@ -60,7 +60,7 @@ Prérequis de Compilation :
 - Dépendances : `pip install pynput requests pyinstaller`.
 - Ressource : Une icône réaliste (ex: acrobat.ico) placée dans le dossier.
 
-> Note : La création du fichier .exe a transmettre au cible attaqué n'est a effectuée qu'une seule fois pour insérer l'URL de votre Ngrok, par la suite, il faudra seulement executer le .exe sur la machine Windows.
+> **Note :** La création du fichier .exe à transmettre à la cible attaquée n'est a effectuer qu'une seule fois pour insérer l'URL de votre Ngrok. Par la suite, il faudra seulement executer le .exe sur la machine cible Windows.
 
 ###### ⚙️ Création du Payload (Build)
 
