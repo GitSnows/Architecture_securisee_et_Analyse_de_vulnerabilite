@@ -74,30 +74,30 @@ Ouvrez l'invite de commande (CMD) dans le dossier du script et exécutez la comm
 `py -m PyInstaller --onefile --noconsole --hidden-import pynput --icon=acrobat.ico --clean Reader_install.py`
 
 
---onefile : Package tout (Python, libs, script) dans un seul .exe.
+**--onefile :** Package tout (Python, libs, script) dans un seul .exe.
 
---noconsole : Mode Silencieux. Aucune fenêtre ne s'ouvre au lancement.
+**--noconsole :** Mode Silencieux. Aucune fenêtre ne s'ouvre au lancement.
 
---icon=acrobat.ico : Spoofing. L'exécutable ressemble à un installeur officiel.
+**--icon=acrobat.ico :** Spoofing. L'exécutable ressemble à un installeur officiel.
 
-Récupération :
+**Récupération :**
 Le fichier infecté se trouve dans le dossier dist/Reader_install.exe.
 
 #### 4. Scénario de Démonstration
 
 Pour évaluer le projet, suivez ces étapes :
 
-** Attaquant : ** Lancez `python3 lanceur_serveur.py` sur Kali. Le serveur est en écoute.
+**Attaquant :** Lancez `python3 lanceur_serveur.py` sur Kali. Le serveur est en écoute.
 
-** Victime : ** Sur Windows, double-cliquez sur Reader_install.exe.
+**Victime :** Sur Windows, double-cliquez sur Reader_install.exe.
 
->Observation : Rien ne se passe à l'écran (comportement attendu du malware). Vérifiez le Gestionnaire des tâches pour voir le processus en arrière-plan.
+**Observation :** Rien ne se passe à l'écran (comportement attendu du malware). Vérifiez le Gestionnaire des tâches pour voir le processus en arrière-plan.
 
->Activité : Ouvrez un Bloc-notes et tapez du texte, des mots de passe. Vous pouvez aussi saisir du texte dans le navigateur par exemple.
+**Activité :** Ouvrez un Bloc-notes et tapez du texte, des mots de passe. Vous pouvez aussi saisir du texte dans le navigateur par exemple.
 
-> Exfiltration : Appuyez sur ENTRÉE pour forcer l'envoi immédiat. Ou patientez 60 secondes (cycle automatique).
+**Exfiltration :** Appuyez sur ENTRÉE pour forcer l'envoi immédiat. Ou patientez 60 secondes (cycle automatique).
 
-> Résultat : Sur le terminal Kali, vous verrez apparaître :
+**Résultat :** Sur le terminal Kali, vous verrez apparaître :
 
 `[+] Log reçu : MonMotDePasseSecret123`
 
@@ -118,11 +118,11 @@ Si la connexion est coupée, le keylogger continue d'enregistrer localement. Les
 
 Pour éviter de "spammer" le serveur C2 avec des logs illisibles :
 
-Filtrage : Les touches de contrôle (CTRL, ALT, SHIFT) sont interceptées mais ignorées pour ne garder que le texte utile.
+**Filtrage :** Les touches de contrôle (CTRL, ALT, SHIFT) sont interceptées mais ignorées pour ne garder que le texte utile.
 
 
 ###### C. Persistance et Discrétion
 
 Backup Local : En cas d'échec critique du réseau, une copie des logs est écrite discrètement dans le répertoire temporaire de l'utilisateur (%TEMP%\win_backup.log), permettant une récupération physique ultérieure (Forensics).
 
-Processus Arrière-plan : L'utilisation de pythonw (via PyInstaller --noconsole) détache le processus de la console standard Windows.
+**Processus Arrière-plan :** L'utilisation de pythonw (via PyInstaller --noconsole) détache le processus de la console standard Windows.
