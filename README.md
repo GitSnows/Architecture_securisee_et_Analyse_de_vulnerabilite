@@ -36,9 +36,7 @@ Outil : Ngrok (installé et authentifié avec un token).
 
 ###### 🚀 Démarrage de l'Infrastructure
 
-Sur la machine Kali, ouvrez un terminal dans le dossier du projet :
-
-Lancer l'orchestrateur :
+Sur la machine Kali, ouvrez un terminal dans le dossier du projet et lancer l'orchestrateur :
 
 `python3 lanceur_serveur.py`
 
