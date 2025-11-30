@@ -23,18 +23,18 @@ Ce projet implémente une Kill Chain complète simulant une attaque par Spyware.
 
 L'infrastructure serveur a été entièrement automatisée via un script Python pour garantir un déploiement rapide et sans erreur.
 
-Prérequis
+###### Prérequis
 
 Python 3 et pip.
 Bibliothèques : flask, requests.
 Outil : Ngrok (installé et authentifié avec un token).
 
-Fichiers Clés
+###### Fichiers Clés
 
 - log_receiver.py : Le cœur du serveur C2 (Flask).
 - lanceur_serveur.py : Orchestrateur qui gère le tunnel Ngrok et le serveur Flask simultanément.
 
-🚀 Démarrage de l'Infrastructure
+###### 🚀 Démarrage de l'Infrastructure
 
 Sur la machine Kali, ouvrez un terminal dans le dossier du projet :
 
@@ -68,7 +68,7 @@ Dépendances : pip install pynput requests pyinstaller.
 
 Ressource : Une icône réaliste (ex: acrobat.ico) placée dans le dossier.
 
-⚙️ Création du Payload (Build)
+###### ⚙️ Création du Payload (Build)
 
 Configuration de l'URL :
 Ouvrez le fichier keylogger_win_remote.py et modifiez la variable NGROK_URL avec l'adresse fournie par l'attaquant à l'étape précédente :
