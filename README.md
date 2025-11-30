@@ -5,11 +5,11 @@ Ce projet a été développé dans un cadre strictement académique pour le Mast
 
 ### 📑 Sommaire
 
-- Architecture du Projet
-- Configuration de l'Attaquant (Kali Linux)
-- Configuration de la Cible (Windows 10/11)
-- Scénario de Démonstration
-- Analyse Technique des Mécanismes
+1) Architecture du Projet
+2) Configuration de l'Attaquant (Kali Linux)
+3) Configuration de la Cible (Windows 10/11)
+4)  Scénario de Démonstration
+5)   Analyse Technique des Mécanismes
 
 #### 1. Architecture du Projet
 
