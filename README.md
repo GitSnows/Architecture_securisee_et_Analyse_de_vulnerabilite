@@ -25,9 +25,9 @@ L'infrastructure serveur a été entièrement automatisée via un script Python 
 
 ###### Prérequis
 
-Python 3 et pip.
-Bibliothèques : flask, requests.
-Outil : Ngrok (installé et authentifié avec un token).
+- Python 3 et pip.
+- Bibliothèques : flask, requests.
+- Outil : Ngrok (installé et authentifié avec un token).
 
 ###### Fichiers Clés
 
