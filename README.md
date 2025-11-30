@@ -57,7 +57,7 @@ La partie cliente consiste à transformer un script Python en un binaire autonom
 Prérequis de Compilation :
 
 - Machine Windows avec Python 3.x.
-- Dépendances : pip install pynput requests pyinstaller.
+- Dépendances : `pip install pynput requests pyinstaller`.
 - Ressource : Une icône réaliste (ex: acrobat.ico) placée dans le dossier.
 
 ###### ⚙️ Création du Payload (Build)
