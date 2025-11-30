@@ -125,4 +125,4 @@ Pour éviter de "spammer" le serveur C2 avec des logs illisibles :
 
 Backup Local : En cas d'échec critique du réseau, une copie des logs est écrite discrètement dans le répertoire temporaire de l'utilisateur (%TEMP%\win_backup.log), permettant une récupération physique ultérieure (Forensics).
 
-**Processus Arrière-plan :** L'utilisation de pythonw (via PyInstaller --noconsole) détache le processus de la console standard Windows.
+**Processus Arrière-plan :** L'utilisation de pythonw (via `PyInstaller --noconsole`) détache le processus de la console standard Windows.
