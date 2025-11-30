@@ -80,8 +80,6 @@ Ouvrez l'invite de commande (CMD) dans le dossier du script et exécutez la comm
 
 --icon=acrobat.ico : Spoofing. L'exécutable ressemble à un installeur officiel.
 
---name Reader_install : Renomme le fichier final pour plus de crédibilité.
-
 Récupération :
 Le fichier infecté se trouve dans le dossier dist/Reader_install.exe.
 
